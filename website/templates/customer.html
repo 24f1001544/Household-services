@@ -1,0 +1,27 @@
+{% extends "base.html" %} {% block title %}Login{% endblock %}{%block welcome%}<p class="nav-item nav-link">Welcome to Customer</p>{%endblock%}{% block content
+    %}
+    <h1>Our Services</h1>
+    <div class="container">
+        
+        {% for service in services %}
+            <div class="service-item {% if loop.index > 3 %}hidden-service{% endif %}" class="card">
+                <h2>{{ service.name }}</h2>
+                <p class="price">{{ service.base_price }}</p>
+                <p>{{ service.description }}</p>
+                <a href="#" class="btn">Learn More</a>
+            </div>
+        {% endfor %}
+        {% if services|length > 3 %}
+        <div id="show-more">Show More</div>
+    {% endif %}
+
+    <script>
+        document.getElementById('show-more').addEventListener('click', function() {
+            const hiddenServices = document.querySelectorAll('.hidden-service');
+            hiddenServices.forEach(function(service) {
+                service.style.display = 'list-item';  // Show hidden services
+            });
+            this.style.display = 'none';  // Hide the "Show More" button after clicking
+        });
+    </script>
+    {%endblock%}
