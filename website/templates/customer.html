@@ -1,27 +1,90 @@
-{% extends "base.html" %} {% block title %}Login{% endblock %}{%block welcome%}<p class="nav-item nav-link">Welcome to Customer</p>{%endblock%}{% block content
-    %}
-    <h1>Our Services</h1>
-    <div class="container">
-        
+{% extends "base.html" %} {% block css%}
+<link rel="stylesheet" href="{{ url_for('static', filename='home.css') }}">
+{%endblock%}{% block title %}Login{% endblock %}{%block welcome%}<p class="nav-item nav-link">Welcome to
+    Customer</p>{%endblock%}{% block content
+%}
+<h1>Our services</h1>
+<div class="container">
+    <div class="row pad">
         {% for service in services %}
-            <div class="service-item {% if loop.index > 3 %}hidden-service{% endif %}" class="card">
-                <h2>{{ service.name }}</h2>
-                <p class="price">{{ service.base_price }}</p>
-                <p>{{ service.description }}</p>
-                <a href="#" class="btn">Learn More</a>
-            </div>
-        {% endfor %}
-        {% if services|length > 3 %}
-        <div id="show-more">Show More</div>
-    {% endif %}
 
-    <script>
-        document.getElementById('show-more').addEventListener('click', function() {
-            const hiddenServices = document.querySelectorAll('.hidden-service');
-            hiddenServices.forEach(function(service) {
-                service.style.display = 'list-item';  // Show hidden services
-            });
-            this.style.display = 'none';  // Hide the "Show More" button after clicking
+        <div class="col-4 pad">
+            <div class="card {% if loop.index >9%}hidden{% endif %} pt-2">
+
+                <h5 class="card-title card-items">Name:{{ service.name }}</h5>
+                <p class="card-text card-items">{{ service.description }}</p>
+                <a href="/customer/request/{{ service.id }}" class="btn btn-primary">Add Request</a>
+
+            </div>
+        </div>
+
+        {% endfor %}
+    </div>
+</div>
+<br>
+{% if services|length > 9 %}
+
+<button class="btn btn-primary">Show More</button>
+
+{% endif %}
+<br>
+<hr>
+<br>
+
+<h1>Service History</h1>
+<div class="container pt-2">
+    <div class="row pt-2">
+    {% for service in service_history %}
+    <div class="col-4">
+        <div class="card pt-2" >
+    <h5 class="card-title pl-2">{{ service.request_id}}</h5>
+    <h5 class="card-title pl-2">{{ service.name }}</h5>
+    <p class="card-description pl-2">{{ service.status }}</p>
+    <p class="card-description pl-2">{{ service.date_created.strftime("%d/%m/%Y") }}</p>
+    <p class="card-description pl-2">{{ service.date_completed }}</p>
+    {% if service.status=="accepted" %}
+    <a href='/customer/service_request/{{ service.request_id }}' class="btn btn-primary">Close Service</a></div>
+</div>
+</div>
+    {%endif%}
+</div>
+</div>
+{% endfor %}
+
+<br>
+<hr>
+<br>
+
+<script>
+    // JavaScript function to handle the redirection
+    function redirectToService(serviceId) {
+        window.location.href = '/customer/service/' + serviceId;  // Redirect to service detail page
+    }
+</script>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const cards = document.querySelectorAll('.card');
+        const showMoreButton = document.getElementById('show-more');
+
+        let visibleCards = 3; // Initially show 3 cards
+
+        // Show initially visible cards
+        for (let i = 0; i < visibleCards; i++) {
+            cards[i].classList.add('show');
+        }
+
+        showMoreButton.addEventListener('click', function () {
+            // Show hidden cards with animation
+            for (let i = visibleCards; i < cards.length; i++) {
+                cards[i].classList.add('show');
+                cards[i].classList.remove('hidden');
+            }
+            // Hide the "Show More" button after revealing all cards
+            showMoreButton.style.display = 'none';
+
         });
-    </script>
-    {%endblock%}
+    });
+</script>
+{%endblock%}

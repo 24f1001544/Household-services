@@ -1,0 +1,46 @@
+{% extends "base.html" %}     {%block welcome%}<p class="nav-item nav-link">Search</p>{%endblock%}<script>
+    // JavaScript to toggle the input type based on the dropdown selection
+    function updateInputType() {
+        const searchBy = document.getElementById("search_by").value;
+        const searchInput = document.getElementById("search_term");
+
+        if (searchBy === "date") {
+            searchInput.type = "date";
+        } else {
+            searchInput.type = "text";
+        }
+    }
+</script>
+{% block title %}Search{% endblock %} {% block content
+%}
+
+<form method="get" action="/customer/search">
+    <label for="search_by">Search By:</label>
+    <select id="search_by" name="search_by" onchange="updateInputType()">
+        <option value="name" {% if search_by == 'name' %}selected{% endif %}>Name</option>
+        <option value="location" {% if search_by == 'location' %}selected{% endif %}>Location</option>
+        <option value="date" {% if search_by == 'date' %}selected{% endif %}>Date</option>
+    </select>
+    <br>
+    <label for="search_term">Search Term:</label>
+    <input
+        id="search_term"
+        name="search_term"
+        type="{% if search_by == 'date' %}date{% else %}text{% endif %}"
+        value="{{ search_term }}"
+    >
+    <br>
+    <button type="submit">Search</button>
+</form>
+
+<h2>Results:</h2>
+{% if results %}
+    <ul>
+        {% for event in results %}
+            <li>{{ event.name }} - {{ event.location }} - {{ event.date }}</li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No results found.</p>
+{% endif %}
+{%endblock%}

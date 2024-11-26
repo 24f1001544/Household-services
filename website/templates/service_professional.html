@@ -1,0 +1,55 @@
+{% extends "base.html"%}{% block css%}
+<link rel="stylesheet" href="{{ url_for('static', filename='home.css') }}">
+{%endblock%} {%block title%}Service Professional{%endblock%} {%block welcome%}<p class="nav-item nav-link">
+    Welcome To Service Professional</p>{%endblock%} {% block content %}
+<h2>Hello {{user.name}}</h2>
+{%if user.verification_status=="verified"%}
+
+<br>
+<br>
+<h3>Today service</h3>
+<div class="container pt-2">
+    <div class="row pt-2">
+        {%for service in service_request%}
+        {%if service.status=="pending" or service.status=="accepted" %}
+        <div class="col-4">
+            <div class="card pt-2">
+                <h5 class="card-tilte pl-2">ID:{{service.id}}</h5>
+                <h5 class="card-title pl-2">Customer Name:{{service.name}}</h5>
+                <p class="card-description pl-2">Customer Contact Number:{{service.phone}}</p>
+                <p class="card-description pl-2">Address:{{service.address}}</p>
+                <p class="card-description pl-2">Pincode:{{service.pincode}}</p>
+                {%if service.status=="pending"%}
+                <form method="POST" action="/service/{{service.id}}" class="btn btn-primary"><input type="hidden"
+                        name="_method" value="PUT">
+                    <input type="hidden" name="form_type" value="accept"><button class="btn btn-primary">Accept</button>
+                </form>
+                {%else%}
+                <form method="POST" action="/service/{{service.id}}" class="btn btn-primary"><input type="hidden"
+                        name="_method" value="PUT">
+                    <input type="hidden" name="form_type" value="reject"><button class="btn btn-primary">Reject</button>
+                </form>
+                {%endif%}
+            </div>
+        </div>
+        {%endif%}
+        {%endfor%}
+    </div>
+</div>
+<br><br>
+
+<h2>Closed Service</h2>
+{%for service in service_request%}
+{%if service.status=="closed"%}
+<div>
+    <h4>{{service.status}}</h4>
+    <h4>{{service.date_created}}</h4>
+    <h4>{{service.name}}</h4>
+</div>
+{%endif%}
+{%endfor%}
+{%else%}
+<h4>Please wait to be verified by Admin</h4>
+{%endif%}
+
+{%endblock%}

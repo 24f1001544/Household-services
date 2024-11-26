@@ -1,34 +1,59 @@
 {% extends "base.html" %} {% block title %}Home{% endblock %} {% block content
-    %}
-    <main>
-        <section id="available-requests" class="section">
-            <h2 class="section-title">Available Requests</h2>
-            <ul class="request-list">
-                <li class="request-item">Request 1: <button class="view-button">View</button></li>
-                <li class="request-item">Request 2: <button class="view-button">View</button></li>
-                <li class="request-item">Request 3: <button class="view-button">View</button></li>
-            </ul>
-        </section>
+%}
+<main>
+    <section id="available-requests" class="section">
+        <h2 class="section-title">Available Service</h2>
+        {%for service in services%}
+        <ul class="request-list">
+            <li class="request-item"> ID:{{service.id}}</li>
+            <li class="request-item">Name:{{service.name}} </li>
+            <li class="request-item">Base Price:{{service.base_price}}</li>
+            <li class="request-item">Description:{{service.description}}</li>
+            <li><a class="view-button" href="/edit/{{service.id}}">Edit</a></li>
+            <li>
+                <form method="POST" action="/delete/{{service.id}}">
+                    <button type="submit">Delete</button>
+                </form>
+            </li>
+        </ul>
+        {%endfor%}
+        <span><a href="/newService">Create New Service</a></span>
+    </section>
 
-        <section id="my-requests" class="section">
-            <h2 class="section-title">My Requests</h2>
-            <ul class="request-list">
-                <li class="request-item">Request A: Status - Pending</li>
-                <li class="request-item">Request B: Status - Completed</li>
-                <li class="request-item">Request C: Status - In Progress</li>
-            </ul>
-        </section>
+    <section id="my-requests" class="section">
+        <h2 class="section-title">Professionals</h2>
+        {%for prof in profs%}
+        <ul class="request-list">
+            <li class="request-item">Id:{{prof.id}}</li>
+            <li class="request-item">Name:{{prof.name}}</li>
+            <li class="request-item">Experience:{{prof.experience}}</li>
+            <li class="request-item">Service:{{prof.service_name}}</li>
+            {% if prof.status=="pending"%}
+            <form action="/{{prof.id}}" method="POST">
+                <input type="hidden" name="action" value="accept">
+                <button  type="submit">Accept</button>
+            </form>
+            <form action="/{{prof.id}}" method="POST"> <input type="hidden" name="action" value="reject"><button type="submit">Reject</button></form>
+            {%else%}
+            <form  action="/{{prof.id}}" method="POST"><input type="hidden" name="action" value="block"><button type="submit">Block</button></form>
+            {%endif%}
+        </ul>
+        {%endfor%}
+    </section>
 
-        <section id="profile" class="section">
-            <h2 class="section-title">Profile</h2>
-            <p class="profile-info">Name: [Customer Name]</p>
-            <p class="profile-info">Email: [Customer Email]</p>
-            <p class="profile-info">Phone: [Customer Phone]</p>
-            <button class="edit-button">Edit Profile</button>
-        </section>
-    </main>
+    <section id="service_request" class="section">
+        <h2 class="section-title">Current Requests</h2>
+        {%for req in reqs %}
+        <p class="profile-info">Id:{{req.id}}</p>
+        <p class="profile-info">Customer Id:{{req.costumer_id}}</p>
+        <p class="profile-info">Professional Id:{{req.professional_id}}</p>
+        <button class="edit-button">Edit Profile</button>
+        {%endfor%}
 
-    <footer class="footer">
-        <p>&copy; 2024 Your Company Name</p>
-    </footer>
-    {%endblock%}
+    </section>
+</main>
+
+<footer class="footer">
+    <p>&copy; 2024 Your Company Name</p>
+</footer>
+{%endblock%}

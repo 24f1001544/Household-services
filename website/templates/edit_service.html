@@ -1,0 +1,18 @@
+{% extends "base.html"%}{% block content %}
+<h2>Edit What You Want</h2>
+<form method="POST" action="/edit/{{ service.id }}">
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" value="{{ service.name }}" required>
+
+    <label for="description">Description:</label>
+    <textarea id="description" name="description" required>{{ service.description }}</textarea>
+
+    <label for="base_price">Base Price</label>
+    <input type="integer" id="base_price" name="base_price" value="{{ service.base_price }}" required>
+
+
+    <button type="submit">Save Changes</button>
+</form>
+
+
+{%endblock%}
