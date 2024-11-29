@@ -13,23 +13,24 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
+    const counts={{ count_dict | tojson}}; 
+    
     const ctx = document.getElementById('service_requests');
 
     new Chart(ctx, {
+        
         type: 'bar',
         data: {
-            labels: ['Recieved', 'Closed', 'Rejected'],
+            labels: ['Requested', 'Assigned', 'Closed'],
             datasets: [{
                 label: 'Number of request',
-                data: [12, 19, 3, 5, 2, 3],
+                data: [counts.pending,counts.accepted,counts.closed],
                 borderWidth: 1,
-                backgroundColor: ['#5DA5DA ', '#00FF00', '#D10000',
-                        '#B276B2', '#E16851', '#FB8267'],
+                backgroundColor: ['#5DA5DA', '#00FF00', '#D10000'],
 
-                    borderWidth: 1,
                     hoverBorderColor: "black",
                     hoverBorderWidth: 2,
-                    hoverBackgroundColor: 'rgba(154, 245, 140)',
+                    hoverBackgroundColor: ['#8DB9E5','#66FF66','#FF4C4C'],
                     pointHoverRadius: 5
 
             }]

@@ -1,59 +1,83 @@
-{% extends "base.html" %} {% block title %}Home{% endblock %} {% block content
-%}
-<main>
-    <section id="available-requests" class="section">
+{% extends "base.html" %}{% block css%}
+<link rel="stylesheet" href="{{ url_for('static', filename='home.css') }}">
+{%endblock%} {% block title %}Home{% endblock %} {% block content
+%} {%block search%}<a class="nav-item nav-link"  href="/admin/search">Search</a>{%endblock%}
+<br>
+    
         <h2 class="section-title">Available Service</h2>
+        <br>
+        <div class="container">
+        <div class="row">
         {%for service in services%}
-        <ul class="request-list">
-            <li class="request-item"> ID:{{service.id}}</li>
-            <li class="request-item">Name:{{service.name}} </li>
-            <li class="request-item">Base Price:{{service.base_price}}</li>
-            <li class="request-item">Description:{{service.description}}</li>
-            <li><a class="view-button" href="/edit/{{service.id}}">Edit</a></li>
-            <li>
-                <form method="POST" action="/delete/{{service.id}}">
-                    <button type="submit">Delete</button>
-                </form>
-            </li>
-        </ul>
-        {%endfor%}
-        <span><a href="/newService">Create New Service</a></span>
-    </section>
-
-    <section id="my-requests" class="section">
-        <h2 class="section-title">Professionals</h2>
-        {%for prof in profs%}
-        <ul class="request-list">
-            <li class="request-item">Id:{{prof.id}}</li>
-            <li class="request-item">Name:{{prof.name}}</li>
-            <li class="request-item">Experience:{{prof.experience}}</li>
-            <li class="request-item">Service:{{prof.service_name}}</li>
-            {% if prof.status=="pending"%}
-            <form action="/{{prof.id}}" method="POST">
-                <input type="hidden" name="action" value="accept">
-                <button  type="submit">Accept</button>
+        <div class="col-4">
+        <div class="card">
+            <h5 class="card-title"> ID:{{service.id}}</h5>
+            <h5 class="card-title">Name:{{service.name}} </h5>
+            <p class="card-sescription">Base Price:{{service.base_price}}</p>
+            <p class="card-description">Description:{{service.description}}</p>
+            <a class="btn" href="/edit/{{service.id}}" style="background-color: #d1bc1f; color: aliceblue; height: 45px;">Edit</a>
+            
+            <form class="btn btn-danger mt-3" method="POST" action="/delete/{{service.id}}">
+                    <button class="btn btn-danger" type="submit">Delete</button>
             </form>
-            <form action="/{{prof.id}}" method="POST"> <input type="hidden" name="action" value="reject"><button type="submit">Reject</button></form>
+        </div>
+    </div>
+        {%endfor%}
+    </div>
+</div>
+<br>
+        <span><a class="btn btn-primary" href="/newService">Create New Service</a></span>
+    
+<br>
+<br>
+    <hr>
+        <h2 class="section-title">Professionals</h2>
+        <br>
+        <div class="container">
+            <div class="row">
+        {%for prof in profs%}
+        
+        <div class="col-4">
+            <div class="card">
+            <h4><a href="/admin/viewprof/{{prof.id}}" class="btn  pl-4" style="background-color: #d1bc1f;"> Id:{{prof.id}}</a></h4>
+            <h5 class="card-title pl-4">Name:{{prof.name}}</h5>
+            <p class="card-description pl-4">Experience:{{prof.experience}}</p>
+            <p class="card-description pl-4">Service:{{prof.service_name}}</p>
+            {% if prof.status=="pending"%}
+            <form action="/admin/{{prof.id}}" method="POST" class="btn btn-success">
+                <input type="hidden" name="action" value="accept">
+                <button  type="submit" class="btn btn-success">Accept</button>
+            </form>
+            <form action="/admin/{{prof.id}}" method="POST" class="btn btn-danger mt-3" > <input type="hidden" name="action" value="reject"><button type="submit" class="btn btn-danger">Reject</button></form>
             {%else%}
-            <form  action="/{{prof.id}}" method="POST"><input type="hidden" name="action" value="block"><button type="submit">Block</button></form>
+            <form  action="admin/{{prof.id}}" method="POST" class="btn btn-danger"><input type="hidden" name="action" value="block"><button type="submit" class="btn btn-danger">Block</button></form>
             {%endif%}
-        </ul>
+        </div>
+    </div>
         {%endfor%}
-    </section>
-
-    <section id="service_request" class="section">
-        <h2 class="section-title">Current Requests</h2>
+    </div>
+</div>
+<hr>
+<br>
+<h4 class="center">Current Requests</h4>
+<br>
+    <div class="container">
+        
+        <div class="row">
         {%for req in reqs %}
-        <p class="profile-info">Id:{{req.id}}</p>
-        <p class="profile-info">Customer Id:{{req.costumer_id}}</p>
-        <p class="profile-info">Professional Id:{{req.professional_id}}</p>
-        <button class="edit-button">Edit Profile</button>
+        <div class="col-4">
+            <div class="card">
+        <h5 class="card-title pl-3">Id:{{req.id}}</h5>
+        <p class="card-title pl-3">Customer Id:{{req.customer_id}}</p>
+        <p class="card-description pl-3">Professional Id:{{req.professional_id}}</p>
+        <p class="card-description pl-3">Professional Id:{{req.date_requested.strftime("%d/%m/%Y")}}</p>
+        
+    </div>
+</div>
         {%endfor%}
+    </div>
+    </div>
+<br>
+<br>
 
-    </section>
-</main>
-
-<footer class="footer">
-    <p>&copy; 2024 Your Company Name</p>
-</footer>
 {%endblock%}

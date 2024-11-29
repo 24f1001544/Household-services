@@ -1,5 +1,5 @@
-{% extends "base.html" %}  {%block style%}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/review.css') }}">
+{% extends "base.html" %} {%block style%}
+<link rel="stylesheet" href="{{ url_for('static', filename='review.css') }}">
 {%endblock%}{% block content%}
 <h2>Rate Our Service</h2>
 <div class="details">
@@ -9,18 +9,34 @@
     <p><span>Service Name:</span> {{ service_request.service_name }}</p>
     <p><span>Service Description:</span> {{ service_request.service_description }}</p>
 </div>
-<form class="rating-form">
-    <div class="stars">
-        <input type="radio" id="star5" name="rating" value="5"><label for="star5">&#9733;</label>
-        <input type="radio" id="star4" name="rating" value="4"><label for="star4">&#9733;</label>
-        <input type="radio" id="star3" name="rating" value="3"><label for="star3">&#9733;</label>
-        <input type="radio" id="star2" name="rating" value="2"><label for="star2">&#9733;</label>
-        <input type="radio" id="star1" name="rating" value="1"><label for="star1">&#9733;</label>
+<form action="/customer/service_request/{{service_request.service_request_id}}" method="POST">
+
+    <div class="mb-3 mt-3">
+        <label for="rating" class="form-label">Rating</label>
+        <fieldset class="starability-slot">
+
+
+            <input type="radio" id="no-rate" class="input-no-rate" name="review[rating]" value="1" checked
+                aria-label="No rating." />
+            <input type="radio" id="first-rate1" name="review[rating]" value="1" />
+            <label for="first-rate1" title="Terrible">1 star</label>
+            <input type="radio" id="first-rate2" name="review[rating]" value="2" />
+            <label for="first-rate2" title="Not good">2 stars</label>
+            <input type="radio" id="first-rate3" name="review[rating]" value="3" />
+            <label for="first-rate3" title="Average">3 stars</label>
+            <input type="radio" id="first-rate4" name="review[rating]" value="4" />
+            <label for="first-rate4" title="Very good">4 stars</label>
+            <input type="radio" id="first-rate5" name="review[rating]" value="5" />
+            <label for="first-rate5" title="Amazing">5 stars</label>
+        </fieldset>
     </div>
-    <div class="remarks">
-        <label for="remarks">Your Remarks (optional):</label>
-        <textarea id="remarks" name="remarks" rows="4" placeholder="Write your feedback here..."></textarea>
+    <div class="mb-3 mt-3">
+        <label for="comment" class="form-label">Comments</label>
+        <textarea name="review[comment]" id="comment" cols="30" rows="5" class="form-control" required></textarea>
+        <div class="invalid-feedback">please leave a valid review</div>
+
     </div>
-    <button type="submit">Submit</button>
+    <button class="btn btn-outline-dark">Submit</button>
+
 </form>
-    {%endblock%}
+{%endblock%}

@@ -1,0 +1,94 @@
+{% extends "base.html" %} {%block welcome%}<p class="nav-item nav-link">Search</p>{%endblock%}
+
+
+{%block content%}
+<script>
+    // JavaScript to toggle the input type based on the dropdown selection
+    function updateInputType() {
+        const searchBy = document.getElementById("search_by").value;
+        const searchInput = document.getElementById("search_term");
+
+        // Input type remains text for name, location, and pincode
+        searchInput.type = "text";
+    }
+</script>
+
+
+
+<form method="get" action="/service/search">
+    <label for="search_by">Search By:</label>
+    <select id="search_by" name="search_by" onchange="updateInputType()">
+        <option value="name" {% if search_by=='name' %}selected{% endif %}>Name</option>
+        <option value="location" {% if search_by=='location' %}selected{% endif %}>Location</option>
+        <option value="pincode" {% if search_by=='pincode' %}selected{% endif %}>Pincode</option>
+    </select>
+    <br>
+    <label for="search_term">Search Term:</label>
+    <input id="search_term" name="search_term" type="text" value="{{ search_term }}">
+    <br>
+    <button type="submit">Search</button>
+</form>
+
+<h2>Today Services</h2>
+{% if results %}
+<div class="container">
+    <div class="row">
+        {%for service in results%}
+        {%for req in service.service_requested%}
+        {%if req.service_status=="accepted" or req.service_status=="pending"%}
+        <div class="col-4">
+            <div class="card">
+                <h5 class="card-title">ID:{{ req.id}}</h5>
+                <h5 class="card-title">Customer Name:{{ service.name}}</h5>
+                <p class="card-description pl-2">Contact Number:{{service.phone}}</p>
+                <p class="card-description pl-2">Customer Address:{{service.address}}</p>
+                <p class="card-description pl-2">Date Requested:{{req.date_requested}}</p>
+                {%if req.status=="pending"%}
+                <form method="POST" action="/service/{{service.id}}" class="btn btn-primary"><input type="hidden"
+                        name="_method" value="PUT">
+                    <input type="hidden" name="form_type" value="accept"><button class="btn btn-primary">Accept</button>
+                </form>
+                {%else%}
+                <form method="POST" action="/service/{{service.id}}" class="btn btn-primary"><input type="hidden"
+                        name="_method" value="PUT">
+                    <input type="hidden" name="form_type" value="reject"><button class="btn btn-primary">Reject</button>
+                </form>
+                {%endif%}
+            </div>
+        </div>
+        {%endif%}
+        {%endfor%}
+        {%endfor%}
+    </div>
+</div>
+{% else %}
+<p>No results found.</p>
+{% endif %}
+<br>
+<h2>
+    Closed Service
+</h2>
+<br>
+<div class="container">
+    <div class="row">
+        {%for service in results%}
+        {%for req in service.service_requested%}
+        {%if req.service_status=="closed"%}
+        <div class="col-4">
+            <div class="card">
+                <h5 clas="=card-title pl-2">ID:{{req.id}}</h5>
+                <p class="card-title pl-2">Date Created:{{req.date_requested.strftime("%d/%m/%Y")}}</p>
+                <p class="card-title pl-2">Date Completed:{{req.date_completed.strftime("%d/%m/%Y")}}</p>
+                <p class="card-title pl-2">Customer Name:{{service.name}}</p>
+            </div>
+        </div>
+        {%endif%}
+        {%endfor%}
+        {%endfor%}
+    </div>
+</div>
+
+
+
+
+{%endblock%}

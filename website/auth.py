@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, flash, redirect, url_for
+from flask import Blueprint, render_template, request, flash, redirect, url_for,session
 from .models import Service_request,Service,Service_professional,Admin,Customer
 from werkzeug.security import generate_password_hash, check_password_hash
 from . import db   ##means from __init__.py import db
@@ -14,41 +14,49 @@ auth = Blueprint('auth', __name__)
 @auth.route("/login",methods=['GET','POST'])
 def login():
     if request.method=="POST":
+        print(request.form)
         email=request.form.get("email")
         password=request.form.get("password")
-        role=request.form.get("role")
+        user_type=request.form.get("user_type")
         
-        if role=="1":
+        if user_type=="admin":
             user=Admin.query.filter_by(email=email).first()
             if user:       
                 if check_password_hash(user.password,password):
                     login_user(user,remember=True)
-                    return redirect(url_for("views.admin"))
+                    session['user_type'] = user_type
+                    return redirect("/admin")
                 else:
                     flash(message="Password or Email was incorrect!",category="error")
-                    
-        elif role=="2":
+            else:
+                flash(message="Password or Email was incorrect!",category="error")
+                                
+        elif user_type=="service":
             user=Service_professional.query.filter_by(email=email).first()
             if user:
                 if check_password_hash(user.password,password):
                     login_user(user,remember=True)
+                    session['user_type'] = user_type
                     return redirect(url_for("views.service"))
                 else:
                     flash(message="Password or Email was incorrect!",category="error")
             else:
                 flash(message="Password or Email was incorrect!",category="error")
-        else:
+        elif user_type=="customer":
             user=Customer.query.filter_by(email=email).first()
             if user:
                 if check_password_hash(user.password,password):
                     login_user(user,remember=True)
+                    session['user_type'] = user_type
                     flash(message="Login was Successfull",category="success")
                     return redirect("/customer")
                 else:
                     flash(message="Password or Email was incorrect!",category="error")
             else:
                 flash(message="password or email was incorrect",category="error")
-
+        else:
+            flash(message='password or email was incorrect',category='error')
+            return render_template("login.html")
                            
     return render_template("login.html")
 
@@ -72,13 +80,14 @@ def signup():
         experience=request.form.get("exp")
         id= random.randint(1000, 9999)
         service_id=db.session.query(Service.id).filter_by(name=service_name)
-        if role=="2":
+        if role=="customer":
             customer= Customer(email=email,name=name,address=adress,pincode=pincode,password=generate_password_hash(password),id=id)
             db.session.add(customer)
             db.session.commit()
             login_user(customer,remember=True)
+            session['user_type'] = role
             return redirect(url_for("views.customer"))
-        if role=="1":
+        if role=="service":
             service_professional=Service_professional(email=email,name=name,address=adress,pincode=pincode,password=generate_password_hash(password),id=id,description=description,data=fileData, experience=experience,service_id=service_id)
             db.session.add(service_professional)
             db.session.commit()

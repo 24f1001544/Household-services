@@ -1,0 +1,32 @@
+{% extends "base.html"%}{% block content %}
+<div class="container my-5">
+    <div class="card shadow">
+        <div class="card-body">
+            <h1 class="card-title text-center text-primary">{{ customer.name }}</h1>
+            
+            <div class="row my-4">
+                
+                <div class="col-md-8">
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <strong>Email:</strong> {{ customer.email }}
+                        </li>
+                        <li class="list-group-item">
+                            <strong>Address</strong> {{ customer.address }} 
+                        </li>
+                        <li class="list-group-item">
+                            <strong>Pincode:</strong> {{ customer.pincode }} years
+                        </li>
+                        <li class="list-group-item">
+                            <strong>Phone Number:</strong> {{ customer.phone }}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <a href="/customer" class="btn btn-secondary">Back to Home</a>
+            <a href="/customer/profile/edit" class="btn btn-secondary">Edit Deatils</a>
+        </div>
+    </div>
+</div>
+
+{%endblock%}

@@ -1,4 +1,4 @@
-from flask import Flask,request
+from flask import Flask,request,session
 from flask_sqlalchemy import SQLAlchemy
 from os import path
 from flask_login import LoginManager
@@ -30,21 +30,18 @@ def create_app():
     
 
     @login_manager.user_loader
-    def load_user(id):
-         user = Customer.query.get(id)
-         if user:
-             return user
-    
-    # If not found, try loading as a Service Professional
-         user = Service_professional.query.get(id)
-         if user:
-          return user
+    def load_user(user_id):
+    # Get user type from session
+        user_type = session.get('user_type')  # Ensure the key is a string
 
-    # If still not found, try loading as an Admin
-         user = Admin.query.get(id)
-         if user:
-            return user
- 
+    # Load the user based on the type
+        if user_type == "customer":
+            return Customer.query.get(int(user_id))
+        elif user_type == "service":
+           return Service_professional.query.get(int(user_id))
+        elif user_type == "admin":
+           return Admin.query.get(int(user_id))
+        return None  # Return None if user type is not recognized
     return app
 
 

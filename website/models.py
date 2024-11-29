@@ -39,6 +39,9 @@ class Service_request(db.Model):
     date_completed=db.Column(db.DateTime(timezone=True))
     service_status=db.Column(db.String,default="pending")
     professional_id=db.Column(db.Integer,db.ForeignKey("service_professional.id"))
+    service = db.relationship('Service', back_populates='service_requests')  # Link to Service
+    professional = db.relationship('Service_professional', back_populates='service_requests')  # Link to Service Professional
+    
 
 class Service_professional(db.Model,UserMixin):
     __tablename__ = "service_professional"
@@ -55,7 +58,9 @@ class Service_professional(db.Model,UserMixin):
     address=db.Column(db.String(80),nullable=False)
     pincode=db.Column(db.Integer,nullable=False)
     verification_status=db.Column(db.String,default="pending")
-    service_requests = db.relationship('Service_request', secondary="prof_req")
+    service_requests = db.relationship('Service_request')
+    service = db.relationship('Service', back_populates='service_professionals')  # Link to Service
+    service_requests = db.relationship('Service_request', back_populates='professional')  # Link to Service Requests
     
 
 
@@ -66,8 +71,10 @@ class Service(db.Model):
     name = db.Column(db.String(80), nullable=False)
     description = db.Column(db.String, nullable=False)
     base_price=db.Column(db.Integer,nullable=False)
-    service_professional=db.relationship('Service_professional')
-
+    service_professionals = db.relationship('Service_professional', back_populates='service')  # Professionals offering this service
+    service_requests = db.relationship('Service_request', back_populates='service')  # Requests for this service
+    service_professionals = db.relationship('Service_professional', back_populates='service')  # Professionals offering this service
+    service_requests = db.relationship('Service_request', back_populates='service')  # Requests for this service
 class Reviews(db.Model):
     __tablename__="reviews"
     id=db.Column(db.Integer,primary_key=True)

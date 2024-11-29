@@ -4,14 +4,14 @@
 {% block content %}
 <h2>{{service.name}}</h2>
 <h5> Base Price:{{service.base_price}}</h5>
-<div class="container pt-4">
+<div class="container">
     <div class="row">
         
     {%for servce in services%}
     <div class="col-4">
         <div class="card">
-    <h5 class="card-title pl-2">ID:{{service.id}}</h5>
-    <h5 class="card-title pl-2">{{ servce.description}}</h5>
+    <h5 class="card-title">ID:{{service.id}}</h5>
+    <h5 class="card-title">{{ servce.description}}</h5>
     <form method="POST" class="btn btn-primary" style="height: 40px;"><button class="btn btn-primary" style="height: 40px;">Book</button></form>
 </div>  </div>
     {%endfor%}

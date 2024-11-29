@@ -1,0 +1,51 @@
+{% extends "base.html"%}{% block content %}
+<div class="container my-5">
+    <div class="card shadow">
+        <div class="card-body">
+            <h1 class="card-title text-center text-primary">{{ service_prof.name }}</h1>
+            
+            <div class="row my-4">
+                <div class="col-md-4 text-center">
+                    {% if service_prof.data %}
+                        <a href="/admin/viewprof/serve_pdf/{{service_prof.id}}" class="btn btn-outline-primary" target="_blank">
+                            View/Download Profile PDF
+                        </a>
+                    {% else %}
+                        <p class="text-danger">No PDF available</p>
+                    {% endif %}
+                </div>
+                <div class="col-md-8">
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <strong>Service ID:</strong> {{ service_prof.service_id }}
+                        </li>
+                        <li class="list-group-item">
+                            <strong>Email:</strong> {{ service_prof.email }}
+                        </li>
+                        <li class="list-group-item">
+                            <strong>Name</strong> {{ service_prof.name }} 
+                        </li>
+                        <li class="list-group-item">
+                            <strong>Experience:</strong> {{ service_prof.experience }} years
+                        </li>
+                        <li class="list-group-item">
+                            <strong>Address:</strong> {{ service_prof.address }}
+                        </li>
+                        <li class="list-group-item">
+                            <strong>Pincode:</strong> {{ service_prof.pincode }}
+                        </li>
+                        <li class="list-group-item">
+                            <strong>Description</strong> {{ service_prof.description }}
+                        </li>
+                        
+            
+                    </ul>
+                </div>
+            </div>
+            <a href="/service" class="btn btn-secondary">Back to Home</a>
+            <a href="/service/profile/edit" class="btn btn-secondary">Edit Deatils</a>
+        </div>
+    </div>
+</div>
+
+{%endblock%}

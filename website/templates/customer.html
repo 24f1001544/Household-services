@@ -1,15 +1,21 @@
 {% extends "base.html" %} {% block css%}
 <link rel="stylesheet" href="{{ url_for('static', filename='home.css') }}">
-{%endblock%}{% block title %}Login{% endblock %}{%block welcome%}<p class="nav-item nav-link">Welcome to
-    Customer</p>{%endblock%}{% block content
+{%endblock%}{% block title %}Customer{% endblock %}{%block welcome%}<p class="nav-item nav-link">Welcome to
+    Customer</p>{%endblock%}
+    {%block search%}<a class="nav-item nav-link" id="signUp" href="/customer/search">Search</a>{%endblock%}
+    {% block content
 %}
+<div style="position: absolute;
+top: 0;
+right:0;
+margin: 10px;" class="btn btn-success"><a  href="/customer/profile" style="color:brown">Profile</a></div>
 <h1>Our services</h1>
 <div class="container">
     <div class="row pad">
         {% for service in services %}
 
-        <div class="col-4 pad">
-            <div class="card {% if loop.index >9%}hidden{% endif %} pt-2">
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-4 pad">
+            <div class="card men {% if loop.index >9%}hidden{% endif %} pt-2">
 
                 <h5 class="card-title card-items">Name:{{ service.name }}</h5>
                 <p class="card-text card-items">{{ service.description }}</p>
@@ -27,33 +33,29 @@
 <button class="btn btn-primary">Show More</button>
 
 {% endif %}
-<br>
-<hr>
-<br>
+
 
 <h1>Service History</h1>
-<div class="container pt-2">
-    <div class="row pt-2">
-    {% for service in service_history %}
-    <div class="col-4">
-        <div class="card pt-2" >
-    <h5 class="card-title pl-2">{{ service.request_id}}</h5>
-    <h5 class="card-title pl-2">{{ service.name }}</h5>
-    <p class="card-description pl-2">{{ service.status }}</p>
-    <p class="card-description pl-2">{{ service.date_created.strftime("%d/%m/%Y") }}</p>
-    <p class="card-description pl-2">{{ service.date_completed }}</p>
-    {% if service.status=="accepted" %}
-    <a href='/customer/service_request/{{ service.request_id }}' class="btn btn-primary">Close Service</a></div>
+<br>
+<div class="container">
+    <div class="row">
+        {% for service in service_history %}
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+            <div class="card">
+                <h5 class="card-title card-items">ID:{{ service.request_id }}</h5>
+                <p class="card-text card-items">{{ service.name }}</p>
+                <p class="card-text card-items">Status:{{ service.status }}</p>
+                <p class="card-text card-items">Created At:{{ service.date_created.strftime("%d/%m/%Y") }}</p>
+                {% if service.status=="accepted" %}
+                <a href='/customer/service_request/{{ service.request_id }}' class="btn btn-primary">Close Service</a>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
 </div>
-</div>
-    {%endif%}
-</div>
-</div>
-{% endfor %}
 
-<br>
-<hr>
-<br>
+
 
 <script>
     // JavaScript function to handle the redirection
@@ -65,10 +67,10 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        const cards = document.querySelectorAll('.card');
+        const cards = document.querySelectorAll('.men');
         const showMoreButton = document.getElementById('show-more');
 
-        let visibleCards = 3; // Initially show 3 cards
+        let visibleCards = 9; // Initially show 3 cards
 
         // Show initially visible cards
         for (let i = 0; i < visibleCards; i++) {

@@ -1,17 +1,20 @@
 {% extends "base.html"%}{% block content %}
 <h2>Create New Service</h2>
 <form method="POST" action="/newService">
+    <div class="form-group">
     <label for="name">Name:</label>
-    <input type="text" id="name" name="name"  required>
-
+    <input type="text" id="name" name="name" class="form-control" required>
+</div>
+<div class="form-group">
     <label for="description">Description:</label>
-    <textarea id="description" name="description" required></textarea>
+    <textarea id="description" name="description" class="form-control" required></textarea>
+</div>
+<div class="form-group">
+    <label for="base_price" >Base Price</label>
+    <input type="number" id="base_price" name="base_price" class="form-control" required>
+</div>
 
-    <label for="base_price">Base Price</label>
-    <input type="integer" id="base_price" name="base_price" required>
-
-
-    <button type="submit">Save Changes</button>
+    <button class="btn btn-success" type="submit">Save Changes</button>
 </form>
 
 

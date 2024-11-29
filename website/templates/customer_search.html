@@ -1,46 +1,74 @@
-{% extends "base.html" %}     {%block welcome%}<p class="nav-item nav-link">Search</p>{%endblock%}<script>
+{% extends "base.html" %} {%block welcome%}<p class="nav-item nav-link">Search</p>{%endblock%}
+
+
+{%block content%}
+<script>
     // JavaScript to toggle the input type based on the dropdown selection
     function updateInputType() {
         const searchBy = document.getElementById("search_by").value;
         const searchInput = document.getElementById("search_term");
 
-        if (searchBy === "date") {
-            searchInput.type = "date";
-        } else {
-            searchInput.type = "text";
-        }
+        // Input type remains text for name, location, and pincode
+        searchInput.type = "text";
     }
 </script>
-{% block title %}Search{% endblock %} {% block content
-%}
 
-<form method="get" action="/customer/search">
-    <label for="search_by">Search By:</label>
-    <select id="search_by" name="search_by" onchange="updateInputType()">
-        <option value="name" {% if search_by == 'name' %}selected{% endif %}>Name</option>
-        <option value="location" {% if search_by == 'location' %}selected{% endif %}>Location</option>
-        <option value="date" {% if search_by == 'date' %}selected{% endif %}>Date</option>
-    </select>
-    <br>
-    <label for="search_term">Search Term:</label>
-    <input
-        id="search_term"
-        name="search_term"
-        type="{% if search_by == 'date' %}date{% else %}text{% endif %}"
-        value="{{ search_term }}"
-    >
-    <br>
-    <button type="submit">Search</button>
-</form>
 
-<h2>Results:</h2>
-{% if results %}
-    <ul>
-        {% for event in results %}
-            <li>{{ event.name }} - {{ event.location }} - {{ event.date }}</li>
-        {% endfor %}
-    </ul>
-{% else %}
+
+    <form method="get" action="/customer/search">
+        <label for="search_by">Search By:</label>
+        <select id="search_by" name="search_by" onchange="updateInputType()">
+            <option value="name" {% if search_by=='name' %}selected{% endif %}>Name</option>
+            <option value="location" {% if search_by=='location' %}selected{% endif %}>Location</option>
+            <option value="pincode" {% if search_by=='pincode' %}selected{% endif %}>Pincode</option>
+        </select>
+        <br>
+        <label for="search_term">Search Term:</label>
+        <input id="search_term" name="search_term" type="text" value="{{ search_term }}">
+        <br>
+        <button type="submit">Search</button>
+    </form>
+
+    <h2>Services</h2>
+    {% if results %}
+    <div class="container">
+        <div class="row">
+            {%for servce in results%}
+            <div class="col-4">
+                <div class="card">
+                    <h5 class="card-title">ID:{{ servce.id}}</h5>
+                    <h5 class="card-title">{{ servce.description}}</h5>
+                    <form action="/customer/request/{{servce.service_id}}" method="POST" class="btn btn-primary"
+                        style="height: 40px;"><button class="btn btn-primary" style="height: 40px;">Book</button></form>
+                </div>
+            </div>
+            {%endfor%}
+        </div>
+    </div>
+    {% else %}
     <p>No results found.</p>
-{% endif %}
-{%endblock%}
+    {% endif %}
+    <h2>Service History</h2>
+    {% if results1 %}
+    <div class="container">
+        <div class="row">
+            {%for service in results1%}
+            <div class="col-4">
+                <div class="card">
+                    <h5 class="card-title card-items">ID:{{ service.id }}</h5>
+                    <h5 class="card-title card-items">Name:{{ service.professional.description }}</h5>
+                    <p class="card-text card-items">Status:{{ service.service_status }}</p>
+                    <p class="card-text card-items">Created At:{{ service.date_requested.strftime("%d/%m/%Y") }}</p>
+                    {% if service.status=="accepted" %}
+                    <a href='/customer/service_request/{{ service.id }}' class="btn btn-primary">Close Service</a>
+                    {%endif%}
+                </div>
+            </div>
+            {%endfor%}
+        </div>
+    </div>
+    {% else %}
+    <p>No results found.</p>
+    
+    {% endif %}
+    {%endblock%}
